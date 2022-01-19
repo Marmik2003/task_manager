@@ -21,8 +21,8 @@ def all_tasks(request):
     return render(request, 'tasks/all_tasks.html', context=ctx)
 
 def complete_task(request, pk):
-    completed_tasks_arr.append(tasks_arr[pk])
-    tasks_arr.pop(pk)
+    completed_tasks_arr.append(tasks_arr[pk - 1])
+    tasks_arr.pop(pk - 1)
     return redirect('tasks:tasks')
 
 def completed_tasks(request):
@@ -32,5 +32,5 @@ def completed_tasks(request):
     return render(request, 'tasks/completed_tasks.html', context=ctx)
 
 def delete_task(request, pk):
-    tasks_arr.pop(pk)
+    tasks_arr.pop(pk - 1)
     return redirect('tasks:tasks')
