@@ -1,0 +1,31 @@
+<ul class="flex">
+    <li class="flex-1 mr-2">
+        <a
+            {% if request.path == '/' %}
+            class="text-center block rounded-full bg-rose-100 text-red-500 hover:bg-red-300 hover:text-red-600 py-3 px-4" href="#"
+            {% else %}
+            class="text-center block border-white rounded-full text-black hover:bg-rose-50 hover:text-red-500 py-3 px-4" href="{% url 'tasks:index' %}"
+            {% endif %}
+        >
+            All
+        </a>
+    </li>
+    <li class="flex-1 mr-2">
+      <a
+        {% if request.path == '/pending/' %}
+        class="text-center block rounded-full bg-rose-100 text-red-500 hover:bg-red-300 hover:text-red-600 py-3 px-4" href="#"
+        {% else %}
+        class="text-center block border-white rounded-full text-black hover:bg-rose-50 hover:text-red-500 py-3 px-4" href="{% url 'tasks:pending' %}"
+        {% endif %}
+      >Pending</a>
+    </li>
+    <li class="flex-1 mr-2">
+        <a 
+        {% if request.path == '/completed/' %}
+        class="text-center block rounded-full bg-rose-100 text-red-500 hover:bg-red-300 hover:text-red-600 py-3 px-4" href="#"
+        {% else %}
+        class="text-center block border-white rounded-full text-black hover:bg-rose-50 hover:text-red-500 py-3 px-4" href="{% url 'tasks:completed' %}"
+        {% endif %}
+        >Completed</a>
+    </li>
+</ul>
