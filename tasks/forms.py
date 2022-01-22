@@ -40,5 +40,5 @@ class TaskForm(forms.ModelForm):
         tasks.reverse()
         for task in tasks:
             task.priority += 1
-            task.save()
+        Task.objects.bulk_update(tasks, ['priority'])
         return task_obj

@@ -19,7 +19,7 @@ class IndexView(generic.ListView):
         return context
 
     def get_queryset(self):
-        return Task.objects.filter(user=self.request.user, deleted=False).order_by('priority')
+        return Task.objects.filter(user=self.request.user, deleted=False).order_by('completed', 'priority')
 
 
 @method_decorator(login_required, name='dispatch')
