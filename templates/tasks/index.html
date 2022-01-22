@@ -1,5 +1,5 @@
 {% extends '_base.html' %}
-{% block title %}Completed Tasks{% endblock %}
+{% block title %}All Tasks{% endblock %}
 {% block heading %}
 <div class="columns-2 place-content-center">
     <div class="text-left"><h1>Hi {{ request.user.username }}</h1></div>
@@ -7,7 +7,7 @@
 </div>
 {% endblock %}
 {% block content %}
-  <p class="text-gray-500 my-4">{{ object_list.count }} of {{ count_all }} tasks completed</p>
+  <p class="text-gray-500 my-4">{{ count_completed }} of {{ object_list.count }} tasks completed</p>
   {% include '_task_menu.html' %}
   <div class="overflow-y-auto h-80 lg:h-96 my-6">
     {% for task in object_list %}
