@@ -33,10 +33,14 @@ class TaskForm(forms.ModelForm):
     def save(self, commit=True):
         task_obj = super().save(commit=False)
         this_priority = task_obj.priority
-        tasks = []
-        while Task.objects.select_for_update().filter(priority=this_priority, user=task_obj.user, completed=False).exclude(id=task_obj.id).exists():
-            task = Task.objects.select_for_update().filter(priority=this_priority, user=task_obj.user, completed=False).exclude(id=task_obj.id).first()
-            tasks.append(task)
-            this_priority = task.priority = this_priority + 1
+        tasks = Task.objects\
+                    .filter(user=task_obj.user, priority__gte=this_priority, completed=False, deleted=False)\
+                    .exclude(id=task_obj.id).select_for_update().order_by('priority')
+        updating_tasks = []
+        for task in tasks:
+            if task.priority > this_priority:
+                break
+            this_priority = task.priority = task.priority + 1
+            updating_tasks.append(task)
         Task.objects.bulk_update(tasks, ['priority'])
         return task_obj
