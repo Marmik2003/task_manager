@@ -34,11 +34,9 @@ class TaskForm(forms.ModelForm):
         task_obj = super().save(commit=False)
         this_priority = task_obj.priority
         tasks = []
-        while Task.objects.filter(priority=this_priority, user=task_obj.user, completed=False).exclude(id=task_obj.id).exists():
-            tasks.append(Task.objects.filter(priority=this_priority, user=task_obj.user, completed=False).exclude(id=task_obj.id).first())
-            this_priority += 1
-        tasks.reverse()
-        for task in tasks:
-            task.priority += 1
+        while Task.objects.select_for_update().filter(priority=this_priority, user=task_obj.user, completed=False).exclude(id=task_obj.id).exists():
+            task = Task.objects.select_for_update().filter(priority=this_priority, user=task_obj.user, completed=False).exclude(id=task_obj.id).first()
+            tasks.append(task)
+            this_priority = task.priority = this_priority + 1
         Task.objects.bulk_update(tasks, ['priority'])
         return task_obj
