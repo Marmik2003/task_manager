@@ -39,6 +39,10 @@ INSTALLED_APPS = [
     "livereload",
     'django.contrib.staticfiles',
 
+    "django_filters",
+    "rest_framework",
+    "rest_framework.authtoken",
+
     "tasks",
     "users",
 ]
@@ -53,6 +57,14 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'livereload.middleware.LiveReloadScript'
 ]
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+    ],
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
+}
 
 ROOT_URLCONF = 'task_manager.urls'
 

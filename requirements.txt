@@ -1,2 +1,5 @@
 Django==4.0.1
 django-livereload-server==0.4
+djangorestframework==3.13.1
+django-filter==21.1
+drf-nested-routers==0.93.4
