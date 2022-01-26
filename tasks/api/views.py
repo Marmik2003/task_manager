@@ -48,5 +48,8 @@ class TaskHistoryViewSet(ReadOnlyModelViewSet):
     serializer_class = TaskHistorySerializer
     filterset_class = TaskHistoryFilter
 
+    permission_classes = [permissions.IsAuthenticated]
+    authentication_classes = [authentication.BasicAuthentication]    
+
     def get_queryset(self):
         return TaskHistory.objects.filter(task_id=self.kwargs['task_pk']).order_by('-version')
