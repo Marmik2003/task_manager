@@ -15,7 +15,7 @@
       <div class="flex justify-start items-center gap-2">
         <div>
           <p class="text-gray-700 text-lg font-medium tracking-wider">
-            {% if task.completed %}
+            {% if task.status == 'COMPLETED' %}
               <span class="text-red-500 line-through">
                 {{ task.title }}
               </span>
@@ -40,5 +40,7 @@
     {% endfor %}
   </div>
   <button onclick="javascript:window.location.href='{% url 'tasks:add' %}'" class="mt-6 w-full bg-red-500 font-medium py-3 rounded-md text-white tracking-wide">Add</button>
-
+  <p class="mt-4 text-center text-red-500 font-medium">
+    <a href="{% url 'tasks:schedule_reports' %}">Report Mailing Schedule</a>
+  </p>
 {% endblock %}

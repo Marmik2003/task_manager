@@ -40,7 +40,7 @@ class TaskForm(forms.ModelForm):
         task_obj = super().save(commit=False)
         this_priority = task_obj.priority
         tasks = Task.objects\
-                    .filter(user=task_obj.user, priority__gte=this_priority, completed=False, deleted=False)\
+                    .filter(user=task_obj.user, priority__gte=this_priority, status='COMPLETED', deleted=False)\
                     .exclude(id=task_obj.id).select_for_update().order_by('priority')
         updating_tasks = []
         for task in tasks:

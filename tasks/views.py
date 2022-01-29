@@ -4,9 +4,13 @@ from django.contrib.auth.decorators import login_required
 from django.views import View
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth import get_user_model
+from django.db import transaction
 
-from .models import Task
+from .models import Task, UserTaskReportSetting
 from .forms import TaskForm
+
+User = get_user_model()
 
 
 class IndexView(LoginRequiredMixin, generic.ListView):
@@ -15,11 +19,11 @@ class IndexView(LoginRequiredMixin, generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['count_completed'] = Task.objects.filter(completed=True, user=self.request.user, deleted=False).count()
+        context['count_completed'] = Task.objects.filter(status='COMPLETED', user=self.request.user, deleted=False).count()
         return context
 
     def get_queryset(self):
-        return Task.objects.filter(user=self.request.user, deleted=False).order_by('completed', 'priority')
+        return Task.objects.filter(user=self.request.user, deleted=False).order_by('-status', 'priority')
 
 
 class PendingTaskView(LoginRequiredMixin, generic.ListView):
@@ -32,7 +36,7 @@ class PendingTaskView(LoginRequiredMixin, generic.ListView):
         return context
 
     def get_queryset(self):
-        return Task.objects.filter(user=self.request.user, completed=False, deleted=False).order_by('priority')
+        return Task.objects.filter(user=self.request.user, deleted=False).exclude(status='COMPLETED').order_by('priority')
 
 
 class CompletedTaskView(LoginRequiredMixin, generic.ListView):
@@ -45,7 +49,7 @@ class CompletedTaskView(LoginRequiredMixin, generic.ListView):
         return context
 
     def get_queryset(self):
-        return Task.objects.filter(user=self.request.user, completed=True, deleted=False).order_by('priority')
+        return Task.objects.filter(user=self.request.user, status='COMPLETED', deleted=False).order_by('priority')
 
 
 class AddTaskView(LoginRequiredMixin, generic.CreateView):
@@ -78,4 +82,24 @@ class EditTaskView(LoginRequiredMixin, generic.UpdateView):
 class DeleteTaskView(LoginRequiredMixin, View):
     def get(self, request, id):
         Task.objects.filter(id=id).update(deleted=True)
+        return redirect('/')
+
+
+class TaskReportView(LoginRequiredMixin, View):
+    def get(self, request):
+        report_time = UserTaskReportSetting.objects.get(user=request.user).report_time if \
+            UserTaskReportSetting.objects.filter(user=request.user).exists() else None
+        usr_email = self.request.user.email
+        ctx = {'report_time': report_time, 'usr_email': usr_email}
+        return render(request, 'tasks/task_report.html', context=ctx)
+
+    def post(self, request):
+        report_time = self.request.POST.get('report_time')
+        with transaction.atomic():
+            report, created = UserTaskReportSetting.objects.get_or_create(user=request.user)
+            report.report_time = report_time
+            report.save()
+            usr = User.objects.get(id=self.request.user.id)
+            usr.email = self.request.POST.get('usr_email')
+            usr.save()
         return redirect('/')
