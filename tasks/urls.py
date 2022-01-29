@@ -18,4 +18,5 @@ urlpatterns = [
     path('add/', views.AddTaskView.as_view(), name='add'),
     path('edit/<int:pk>/', views.EditTaskView.as_view(), name='edit'),
     path('delete/<int:id>/', views.DeleteTaskView.as_view(), name='delete'),
+    path('schedule_reports/', views.TaskReportView.as_view(), name='schedule_reports'),
 ] + router.urls + history_router.urls

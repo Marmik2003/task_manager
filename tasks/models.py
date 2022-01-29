@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.utils import timezone
 from django.contrib.auth.models import User
 
 
@@ -50,3 +50,8 @@ class Task(models.Model):
             TaskHistory.objects.create(task=self, old_status='', new_status='PENDING')
         if summary_history.first().new_status != self.status:
             TaskHistory.objects.create(task=self, old_status=summary_history.first().new_status, new_status=self.status)
+
+
+class UserTaskReportSetting(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    report_time = models.TimeField(default=timezone.now, null=True, blank=True)
