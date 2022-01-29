@@ -1,7 +1,7 @@
 from django import forms
 from django.db import transaction
 
-from .models import Task
+from .models import Task, STATUS_CHOICES
 
 class TaskForm(forms.ModelForm):
     title = forms.CharField(widget=forms.TextInput(
@@ -10,12 +10,18 @@ class TaskForm(forms.ModelForm):
         attrs={'class': 'bg-slate-100 px-4 py-2 outline-none rounded-md w-full border-0'}))
     priority = forms.IntegerField(widget=forms.NumberInput(
         attrs={'class': 'bg-slate-100 px-4 py-2 outline-none rounded-md w-full border-0'}))
-    completed = forms.BooleanField(widget=forms.CheckboxInput(
-        attrs={'class': 'form-checkbox h-6 w-6 rounded text-red-500 border-0 bg-slate-100'}), required=False)
+    status = forms.ChoiceField(
+        widget=forms.Select(
+            attrs={
+                'class': 'bg-slate-100 px-4 py-2 outline-none rounded-md w-full border-0'
+            },
+        ),
+        choices=STATUS_CHOICES
+    )
 
     class Meta:
         model = Task
-        fields = ['title', 'description', 'priority', 'completed', 'user']
+        fields = ['title', 'description', 'priority', 'status', 'user']
 
     def clean_title(self):
         title = self.cleaned_data['title']
