@@ -15,7 +15,7 @@
       <div class="flex justify-start items-center gap-2">
         <div>
           <p class="text-gray-700 text-lg font-medium tracking-wider">
-            {% if task.completed %}
+            {% if task.status == 'COMPLETED' %}
               <span class="text-red-500 line-through">
                 {{ task.title }}
               </span>
