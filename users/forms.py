@@ -35,5 +35,5 @@ class UserSignUpForm(UserCreationForm):
     @transaction.atomic
     def save(self, *args, **kwargs):
         user = super().save()
-        UserCreationForm.objects.create(user=user)
+        UserTaskReportSetting.objects.create(user=user)
         return user
