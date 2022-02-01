@@ -1,0 +1,21 @@
+{% extends '_base.html' %}
+{% block heading %}
+  <h1 class="text-left">Email Report Settings</h1>
+{% endblock %}
+{% block content %}
+<form action="" method="post">
+  {% csrf_token %}
+  <div class="space-y-4">
+    <div>
+      <label for="usr_email" class="block mb-1 text-gray-800">Email</label>
+      <input type="email" class="bg-slate-100 px-4 py-2 outline-none rounded-md w-full border-0" name="usr_email" id="usr_email" value="{{ usr_email }}" required>
+    </div>
+    <div>
+      <label for="report_time" class="block mb-1 text-gray-800">Email Report Time (UTC)</label>
+      <input type="time" class="bg-slate-100 px-4 py-2 outline-none rounded-md w-full border-0" name="report_time" id="report_time" value="{{ report_time|date:'H:i' }}" required>
+    </div>
+    <button class="mt-6 w-full bg-red-500 py-3 rounded-md text-white tracking-wide">Schedule Email Reports</button>
+  </div>
+</form>
+{% endblock %}
+
