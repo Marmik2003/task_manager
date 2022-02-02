@@ -26,8 +26,9 @@ def memcache_lock(lock_id, oid):
 
 @periodic_task(run_every=datetime.timedelta(minutes=1), bind=True)
 def send_email_reports(*args, **kwargs):
-    for user_setting in UserTaskReportSetting.objects.all():
-        k_start = datetime.datetime.now().replace(tzinfo=None)
+    k_start = datetime.datetime.now().replace(tzinfo=None)
+    k_int = k_start + datetime.timedelta(minutes=1)
+    for user_setting in UserTaskReportSetting.objects.select_for_update().filter(report_time__gte=k_start, report_time__lt=k_int):
         k_end = datetime.datetime.combine(datetime.datetime.now().date(), user_setting.report_time, tzinfo=None)
         k = (k_end - k_start).total_seconds()
         print("total seconds:", k)
@@ -40,7 +41,7 @@ def send_email_reports(*args, **kwargs):
                     for status_val, status_text in STATUS_CHOICES:
                         status_str = f"{status_text} Tasks:\n"
                         message += status_str
-                        tasks = Task.objects.filter(user=user_setting.user, status=status_val)
+                        tasks = Task.objects.select_for_update().filter(user=user_setting.user, status=status_val)
                         if tasks.count() != 0:
                             for idx, task in enumerate(tasks):
                                 message += f"{idx+1}. {task.title}\n"
