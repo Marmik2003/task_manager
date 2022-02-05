@@ -1,6 +1,4 @@
 from django.shortcuts import render, redirect
-from django.utils.decorators import method_decorator
-from django.contrib.auth.decorators import login_required
 from django.views import View
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -96,7 +94,7 @@ class TaskReportView(LoginRequiredMixin, View):
     def post(self, request):
         report_time = self.request.POST.get('report_time')
         with transaction.atomic():
-            report, created = UserTaskReportSetting.objects.get_or_create(user=request.user)
+            report = UserTaskReportSetting.objects.get_or_create(user=request.user)[0]
             report.report_time = report_time
             report.save()
             usr = User.objects.get(id=self.request.user.id)
