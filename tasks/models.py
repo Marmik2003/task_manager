@@ -64,3 +64,4 @@ class Task(models.Model):
 class UserTaskReportSetting(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     report_time = models.TimeField(default=timezone.now, null=True, blank=True)
+    last_sent_at = models.DateTimeField(null=True, blank=True)
