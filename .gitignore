@@ -7,4 +7,7 @@ node_modules/
 celerybeat-schedule
 celerybeat.pid
 celerybeat-schedule.db
+
+.DS_Store
 .pylintrc
+.coverage
