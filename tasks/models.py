@@ -1,3 +1,5 @@
+import datetime
+
 from django.db import models, transaction
 from django.utils import timezone
 from django.contrib.auth.models import User
@@ -68,6 +70,6 @@ class UserTaskReportSetting(models.Model):
 
     def save(self, *args, **kwargs):
         if self.last_sent_at is None:
-            self.last_sent_at = timezone.now() + timezone.timedelta(days=-1, hours=self.report_time.hour, minutes=self.report_time.minute)
+            self.last_sent_at = datetime.datetime.now().replace(hour=self.report_time.hour, minute=self.report_time.minute)
         obj = super().save(*args, **kwargs)
         return obj
