@@ -66,8 +66,8 @@ class UserTaskReportSetting(models.Model):
     report_time = models.TimeField(default=timezone.now, null=True, blank=True)
     last_sent_at = models.DateTimeField()
 
-    def save(self):
+    def save(self, *args, **kwargs):
         if self.last_sent_at is None:
             self.last_sent_at = timezone.now() + timezone.timedelta(days=-1, hours=self.report_time.hour, minutes=self.report_time.minute)
-        obj = super().save()
+        obj = super().save(*args, **kwargs)
         return obj
