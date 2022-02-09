@@ -18,7 +18,6 @@ def send_email_reports(*args, **kwargs):
     tasks_settings = UserTaskReportSetting.objects.select_for_update().filter(
         Q(last_sent_at__isnull=True) | Q(last_sent_at__lt=timeframe)
     )
-    updating_settings = []
     with transaction.atomic():
         for user_setting in tasks_settings:
             complete_line = "\n" + "="*30 + "\n\n"
@@ -34,6 +33,6 @@ def send_email_reports(*args, **kwargs):
                     message += "Nothing to show!\n"
                 message += complete_line
             send_mail('Your 24 hours Tasks Summary', message, 'marmik@thedataboy.com', [user_setting.user.email])
-            user_setting.last_sent_at = datetime.datetime.now(timezone.utc)
-            updating_settings.append(user_setting)
-        UserTaskReportSetting.objects.bulk_update(updating_settings, ['last_sent_at'])
+            user_setting.last_sent_at = datetime.datetime.now(timezone.utc).replace(hour=user_setting.report_time.hour, minute=user_setting.report_time.minute)
+            user_setting.save()
+    return tasks_settings.count()
