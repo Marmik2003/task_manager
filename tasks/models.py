@@ -1,3 +1,5 @@
+import datetime
+
 from django.db import models, transaction
 from django.utils import timezone
 from django.contrib.auth.models import User
@@ -64,4 +66,10 @@ class Task(models.Model):
 class UserTaskReportSetting(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     report_time = models.TimeField(default=timezone.now, null=True, blank=True)
-    last_sent_at = models.DateTimeField(null=True, blank=True)
+    last_sent_at = models.DateTimeField()
+
+    def save(self, *args, **kwargs):
+        if self.last_sent_at is None:
+            self.last_sent_at = timezone.now().replace(hour=self.report_time.hour, minute=self.report_time.minute) - datetime.timedelta(days=1)
+        obj = super().save(*args, **kwargs)
+        return obj
