@@ -3,11 +3,9 @@ import time
 
 from celery.decorators import periodic_task
 from django.db import transaction
-from django.core.cache import cache
 from django.core.mail import send_mail
 from django.db.models import Q
 from django.utils import timezone
-from task_manager.celery import app
 
 from .models import STATUS_CHOICES, Task, UserTaskReportSetting
 
