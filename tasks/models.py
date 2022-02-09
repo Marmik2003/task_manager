@@ -64,4 +64,9 @@ class Task(models.Model):
 class UserTaskReportSetting(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     report_time = models.TimeField(default=timezone.now, null=True, blank=True)
-    last_sent_at = models.DateTimeField(null=True, blank=True)
+    last_sent_at = models.DateTimeField()
+
+    def save(self):
+        if self.last_sent_at is None:
+            self.last_sent_at = timezone.now() + timezone.timedelta(days=-1, hours=self.report_time.hour, minutes=self.report_time.minute)
+        super(UserTaskReportSetting, self).save()
