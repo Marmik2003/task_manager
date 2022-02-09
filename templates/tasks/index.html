@@ -7,10 +7,10 @@
 </div>
 {% endblock %}
 {% block content %}
-  <p class="text-gray-500 my-4">{{ count_completed }} of {{ object_list.count }} tasks completed</p>
+  <p class="text-gray-500 my-4">{{ count_completed }} of {{ all_tasks.count }} tasks completed</p>
   {% include '_task_menu.html' %}
   <div class="overflow-y-auto h-80 lg:h-96 my-6">
-    {% for task in object_list %}
+    {% for task in all_tasks %}
     <div class="bg-slate-100 flex justify-between items-center p-4 rounded-xl mt-4">
       <div class="flex justify-start items-center gap-2">
         <div>
