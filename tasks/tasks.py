@@ -13,7 +13,6 @@ from .models import STATUS_CHOICES, Task, UserTaskReportSetting
 def send_email_reports(*args, **kwargs):
     timeframe = datetime.datetime.now(timezone.utc) - datetime.timedelta(days=1)
     tasks_settings = UserTaskReportSetting.objects.select_for_update().filter(last_sent_at__lt=timeframe)
-    updating_settings = []
     with transaction.atomic():
         for user_setting in tasks_settings:
             complete_line = "\n" + "="*30 + "\n\n"
