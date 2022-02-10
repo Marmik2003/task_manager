@@ -5,6 +5,7 @@ beautifulsoup4==4.10.0
 billiard==3.6.4.0
 celery==4.4.7
 colorama==0.4.4
+coverage==6.3.1
 Deprecated==1.2.13
 Django==4.0.1
 django-filter==21.1
