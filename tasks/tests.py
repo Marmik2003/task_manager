@@ -409,7 +409,10 @@ class SendEmailReportTest(TestCase):
         self.client = APIClient()
         self.user = User.objects.create_user(username='testuser', password='12345', email='test@gmail.com')
         self.task = sample_task(user=self.user)
-        UserTaskReportSetting.objects.create(user=self.user, report_time=timezone.now() + datetime.timedelta(minutes=-1))
+        UserTaskReportSetting.objects.create(
+            user=self.user, 
+            report_time=timezone.now() + datetime.timedelta(minutes=-1)
+        )
 
     def test_send_email_report(self):
         """
@@ -418,3 +421,12 @@ class SendEmailReportTest(TestCase):
 
         response = send_email_reports()
         self.assertEqual(response, 1)
+        report_setting = UserTaskReportSetting.objects.first()
+        self.assertEqual(
+            report_setting.last_sent_at.replace(second=0, microsecond=0), 
+            timezone.now().replace(
+                hour=report_setting.report_time.hour, 
+                minute=report_setting.report_time.minute, 
+                second=0, microsecond=0
+            )
+        )
